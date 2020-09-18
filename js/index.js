@@ -12,4 +12,8 @@ import { Population } from './classes/Population.js';
 // TODO: Mutation
 // TODO: Crossover
 
-let population = new Population();
+let population = new Population(4);
+
+console.log(population.size);
+population.thinkAll();
+console.log(population.size);

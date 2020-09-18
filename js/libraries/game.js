@@ -1,5 +1,8 @@
 // Credit to @joelrojo on GitHub
 // https://github.com/joelrojo/2048/blob/master/js/game.js
+// With adaptations
+
+const moves = ["up", "right", "down", "left"];
 
 export const Game = function (boardString = '0000000000000000') {
     this.board = generateNewBoard(boardString);
@@ -43,19 +46,50 @@ export const Game = function (boardString = '0000000000000000') {
         }
         this.board = spawnBlock(this.board)
         this.moves++;
-    }
+    };
+
+    this.checkForWin = function() {
+        return this.toArray().includes("2048");
+    };
+
+    this.checkForLoss = function () {
+        let deadEnds = 0;
+        moves.forEach(x => {
+            let boardCopy = new Game(this.toArray().map(y => parseInt(y)));
+            boardCopy.move(x);
+            if (this.toString() == boardCopy.toString()) {
+                deadEnds++;
+            };
+        });
+        if (deadEnds == 4) {
+            return true;
+        } else {
+            return false;
+        };
+    };
 };
 
-function spawnBlock(board, numBlocks = 1) {
-    var count = 0;
-    while (count < numBlocks) {
-        let row = Math.floor(Math.random() * 4);
-        let col = Math.floor(Math.random() * 4);
-        if (board[row][col] === 0) {
-            board[row][col] = 2;
-            count++;
-        }
-    }
+function spawnBlock(board) {
+    // var count = 0;
+    // while (count < numBlocks) {
+    //     let row = Math.floor(Math.random() * 4);
+    //     let col = Math.floor(Math.random() * 4);
+    //     if (board[row][col] === 0) {
+    //         board[row][col] = 2;
+    //         count++;
+    //     }
+    // }
+    let zeroSquareIndexes = [];
+    for (let row=0;row<board.length;row++) {
+        for (let cell = 0; cell < board[row].length; cell++) {
+            if (board[row][cell] === 0) {
+                zeroSquareIndexes.push([row, cell]);
+            }
+        };
+    };
+    if (zeroSquareIndexes.length == 0) return board;
+    const randIndexes = zeroSquareIndexes[Math.floor(Math.random() * zeroSquareIndexes.length)];
+    board[randIndexes[0]][randIndexes[1]] = 2;
     return board;
 }
 
@@ -76,13 +110,13 @@ function generateNewBoard(boardString) {
         }
     } else if (boardString instanceof Array) {
         board[0] = boardString.slice(0, 4);
-        board[1] = boardString.slice(4, 8)
+        board[1] = boardString.slice(4, 8);
         board[2] = boardString.slice(8, 12);
         board[3] = boardString.slice(12, 16);
-
     } else {
-        board = spawnBlock(board, 2);
-    }
+        board = spawnBlock(board);
+        board = spawnBlock(board);
+    };
     return board;
 }
 
