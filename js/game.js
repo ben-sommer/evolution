@@ -7,7 +7,7 @@ export const Game = function (boardString = '0000000000000000') {
     this.score = 0;
 
     this.toArray = function () {
-        array = this.board[0].join(",") + "," + this.board[1].join(",") + "," + this.board[2].join(",") + "," + this.board[3].join(",");
+        let array = this.board[0].join(",") + "," + this.board[1].join(",") + "," + this.board[2].join(",") + "," + this.board[3].join(",");
         return array.split(",");
     }
 
