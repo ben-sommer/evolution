@@ -20,25 +20,25 @@ export const Game = function (boardString = '0000000000000000') {
 
     this.move = function (direction) {
         switch (direction) {
-            case "up":
+            case "left":
                 var resolved = resolveColUp(this.board)
                 this.board = resolved['board'];
                 this.score += resolved['score'];
                 break;
 
-            case "down":
+            case "right":
                 var resolved = resolveColDown(this.board)
                 this.board = resolved['board'];
                 this.score += resolved['score'];
                 break;
 
-            case "left":
+            case "up":
                 var resolved = resolveRowLeft(this.board)
                 this.board = resolved['board'];
                 this.score += resolved['score'];
                 break;
 
-            case "right":
+            case "down":
                 var resolved = resolveRowRight(this.board)
                 this.board = resolved['board'];
                 this.score += resolved['score'];
@@ -67,6 +67,21 @@ export const Game = function (boardString = '0000000000000000') {
             return false;
         };
     };
+
+    this.getAvailableMoves = function () {
+        let deadEnds = 0;
+        let availableMoves = [];
+        moves.forEach(x => {
+            let boardCopy = new Game(this.toArray().map(y => parseInt(y)));
+            boardCopy.move(x);
+            if (this.toString() == boardCopy.toString()) {
+                deadEnds++;
+            } else {
+                availableMoves.push(x);
+            };
+        });
+        return availableMoves
+    };
 };
 
 function spawnBlock(board) {
@@ -87,7 +102,10 @@ function spawnBlock(board) {
             }
         };
     };
-    if (zeroSquareIndexes.length == 0) return board;
+    if (zeroSquareIndexes.length == 0) {
+        // alert(board.toString())
+        return board;
+    };
     const randIndexes = zeroSquareIndexes[Math.floor(Math.random() * zeroSquareIndexes.length)];
     board[randIndexes[0]][randIndexes[1]] = 2;
     return board;

@@ -1,4 +1,3 @@
-import { thing } from './utils.js';
 import { Individual } from './classes/Individual.js';
 import { Population } from './classes/Population.js';
 
@@ -12,8 +11,27 @@ import { Population } from './classes/Population.js';
 // TODO: Mutation
 // TODO: Crossover
 
-let population = new Population(4);
+let population = new Population(16);
 
-console.log(population.size);
-population.thinkAll();
-console.log(population.size);
+population.display();
+
+window.pop = population;
+
+function go() {
+    setInterval(() => {
+        population.thinkAll();
+        population.display();
+    }, 1);
+}
+
+go();
+
+// let test = new Population(1);
+// test.individuals[0].game.board = [
+//     [2, 2, 2, 2],
+//     [2, 2, 2, 2],
+//     [2, 2, 2, 2],
+//     [2, 2, 2, 2]
+// ]
+// console.log(test.individuals[0].game.getAvailableMoves());
+// test.display()
